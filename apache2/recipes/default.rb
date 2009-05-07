@@ -20,9 +20,9 @@
 package "apache2" do
   case node[:platform]
   when "centos","redhat","fedora","suse"
-    name "httpd"
+    package_name "httpd"
   when "debian","ubuntu"
-    name "apache2"
+    package_name "apache2"
   end
   action :install
 end
@@ -30,13 +30,16 @@ end
 service "apache2" do
   case node[:platform]
   when "centos","redhat","fedora","suse"
-    name "httpd"
+    service_name "httpd"
   when "debian","ubuntu"
-    name "apache2"
+    service_name "apache2"
   end
   supports value_for_platform(
     "debian" => { "4.0" => [ :restart, :reload ], "default" => [ :restart, :reload, :status ] },
     "ubuntu" => { "default" => [ :restart, :reload, :status ] },
+    "centos" => { "default" => [ :restart, :reload, :status ] },
+    "redhat" => { "default" => [ :restart, :reload, :status ] },
+    "fedora" => { "default" => [ :restart, :reload, :status ] },
     "default" => { "default" => [:restart, :reload ] }
   )
   action :enable
@@ -65,17 +68,28 @@ if platform?("centos", "redhat", "fedora", "suse")
   end
     
   execute "generate-module-list" do
-    command "/usr/local/bin/apache2_module_conf_generate.pl /usr/#{node[:architecture]}/httpd/modules /etc/httpd/mods-available"  
+    if node[:kernel][:machine] == "x86_64" 
+      libdir = "lib64"
+    else 
+      libdir = "lib"
+    end
+    command "/usr/local/bin/apache2_module_conf_generate.pl /usr/#{libdir}/httpd/modules /etc/httpd/mods-available"
+    
     action :run
   end
   
-  %w{a2ensite a2dissite s2enmod s2dismod}.each do |modscript|
+  %w{a2ensite a2dissite a2enmod a2dismod}.each do |modscript|
     template "/usr/sbin/#{modscript}" do
       source "#{modscript}.erb"
       mode 0755
       owner "root"
       group "root"
     end  
+  end
+
+  # installed by default on centos/rhel, remove in favour of mods-enabled
+  file "#{node[:apache][:dir]}/conf.d/proxy_ajp.conf" do
+    action :delete
   end
 end
 
