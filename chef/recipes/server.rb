@@ -85,14 +85,14 @@ end
 directory "/var/log/chef" do
   owner "chef"
   group "chef"
-  mode "775"
+  mode 0755
 end
 
 %w{ openid cache search_index openid/cstore }.each do |dir|
   directory "#{node[:chef][:path]}/#{dir}" do
     owner "chef"
     group "chef"
-    mode "775"
+    mode 0755
   end
 end
 
@@ -126,7 +126,7 @@ template "#{node[:chef][:server_path]}/config.ru" do
   source "config.ru.erb"
   owner "chef"
   group "chef"
-  mode "644"
+  mode 0644
   notifies :restart, resources(:service => "apache2")
 end
 
@@ -135,7 +135,7 @@ template "#{node[:chef][:server_path]}/config/environments/production.rb" do
   action :create
   owner "root"
   group "root"
-  mode "664"
+  mode 0644
   notifies :restart, resources(:service => "apache2")
 end
 
@@ -144,7 +144,7 @@ template "#{node[:chef][:server_path]}/config/init.rb" do
   action :create
   owner "root"
   group "root"
-  mode "664"
+  mode 0644
   notifies :restart, resources(:service => "apache2")
 end
 

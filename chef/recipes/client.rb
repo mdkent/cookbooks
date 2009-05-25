@@ -59,32 +59,32 @@ end
 directory "/etc/chef" do
   owner "chef"
   group "chef"
-  mode "775"
+  mode 0755
 end
 
 directory node[:chef][:path] do
   owner "chef"
   group "chef"
-  mode "775"
+  mode 0755
 end
 
 directory "/var/log/chef" do
   owner "chef"
   group "chef"
-  mode "775"
+  mode 0755
 end
 
 template "/etc/chef/client.rb" do
   source "client.rb.erb"
   owner "chef"
   group "chef"
-  mode "644"
+  mode 0644
 end
 
 directory node[:chef][:run_path] do
   owner "chef"
   group "chef"
-  mode "755"
+  mode 0755
 end
 
 execute "Register client node with Chef Server" do
