@@ -1,0 +1,6 @@
+maintainer        "Bravenet Web Services Inc."
+maintainer_email  "admins@bravenet.com"
+license           "Apache 2.0"
+description       "Setup yum packages and provide definitions to setup repositories"
+version           "0.0.1"
+recipe            "yum", "Install yum"
