@@ -1,6 +1,6 @@
 include_recipe "packages"
 
-if platform?("centos") && node[:platform_version] == "5"
+if platform?("centos") && node[:platform_version].to_f > 5.0
   %w{
     yum-allowdowngrade
     yum-changelog
