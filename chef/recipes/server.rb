@@ -19,45 +19,56 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-root_group = value_for_platform(
-  "openbsd" => { "default" => "wheel" },
-  "freebsd" => { "default" => "wheel" },
-  "default" => "root"
-)
-
 include_recipe "chef::client"
 
-service "chef-indexer" do
-  action :nothing
-end
-
-service "chef-server" do
-  action :nothing
-  if node[:chef][:init_style] == "runit"
-    restart_command "sv int chef-server"
+%w{chef-indexer chef-server}.each do |svc| 
+  service svc do
+    supports [ :restart, :reload, :status ]
+    action :nothing
   end
 end
 
 if node[:chef][:server_log] == "STDOUT"
   server_log = node[:chef][:server_log]
-  show_time  = "false"
+  server_show_time = "false"
 else
   server_log = "\"#{node[:chef][:server_log]}\""
-  show_time  = "true"
+  server_show_time = "true"
+end
+
+if node[:chef][:indexer_log] == "STDOUT"
+  indexer_log = node[:chef][:indexer_log]
+  indexer_show_time = "false"
+else
+  indexer_log = "\"#{node[:chef][:indexer_log]}\""
+  indexer_show_time = "true"
 end
 
 template "/etc/chef/server.rb" do
   source "server.rb.erb"
   owner "root"
-  group root_group
+  group "root" 
   mode "644"
   variables(
     :server_log => server_log,
-    :show_time  => show_time
+    :show_time  => server_show_time
   )
   notifies :restart, resources(
-    :service => "chef-indexer",
     :service => "chef-server"
+  ), :delayed
+end
+
+template "/etc/chef/indexer.rb" do
+  source "indexer.rb.erb"
+  owner "root"
+  group "root" 
+  mode "644"
+  variables(
+    :indexer_log => indexer_log,
+    :show_time  => indexer_show_time
+  )
+  notifies :restart, resources(
+    :service => "chef-indexer"
   ), :delayed
 end
 
@@ -71,5 +82,11 @@ http_request "compact chef couchDB" do
     rescue OpenURI::HTTPError
       nil
     end
+  end
+end
+
+%w{chef-indexer chef-server}.each do |svc| 
+  service svc do
+    action :enabled
   end
 end

@@ -19,12 +19,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-root_group = value_for_platform(
-  "openbsd" => { "default" => "wheel" },
-  "freebsd" => { "default" => "wheel" },
-  "default" => "root"
-)
-
 if node[:chef][:client_log] == "STDOUT"
   client_log = node[:chef][:client_log]
   show_time  = "false"
@@ -43,7 +37,7 @@ end
 template "/etc/chef/client.rb" do
   source "client.rb.erb"
   owner "root"
-  group root_group
+  group "root"
   mode "644"
   variables(
     :client_log => client_log,
@@ -61,4 +55,11 @@ end
 execute "Remove the validation token" do
   command "rm /etc/chef/validation_token"
   only_if { File.exists?("/etc/chef/validation_token") }
+end
+
+service "chef-client" do
+  supports [ :restart, :reload, :status ]
+  # Change this to :disable if you want to run chef-client in the foreground or
+  # via cron.
+  action :enabled
 end
