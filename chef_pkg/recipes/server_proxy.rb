@@ -1,6 +1,6 @@
 #
 # Author:: Joshua Timberman <joshua@opscode.com>
-# Cookbook Name:: chef
+# Cookbook Name:: chef_pkg
 # Recipe:: server_proxy
 #
 # Copyright 2009, Opscode, Inc
@@ -19,7 +19,7 @@
 
 node[:apache][:listen_ports] << "444" unless node[:apache][:listen_ports].include?("444")
 
-include_recipe "chef::server"
+include_recipe "chef_pkg::server"
 include_recipe "apache2"
 include_recipe "apache2::mod_ssl"
 include_recipe "apache2::mod_proxy"

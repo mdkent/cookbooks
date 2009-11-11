@@ -1,7 +1,7 @@
 #
 # Author:: Joshua Timberman <joshua@opscode.com>
 # Author:: Joshua Sierles <joshua@37signals.com>
-# Cookbook Name:: chef
+# Cookbook Name:: chef_pkg
 # Recipe:: client
 #
 # Copyright 2008-2009, Opscode, Inc

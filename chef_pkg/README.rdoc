@@ -1,10 +1,7 @@
-= IMPORTANT CHANGES:
+= IMPORTANT NOTE:
 
-First be aware of important changes in this version from previous versions.
-
-== General:
-
-The attributes have been consolidated into one file, chef.rb, rather than split amongst chef.rb, client.rb, indexer.rb and server.rb.
+This cookbook is only intended for Chef installations from distribution
+packages. Currently this means Debian, Ubuntu, CentOS or RHEL.
 
 == Client:
 
@@ -14,11 +11,7 @@ The client service is not managed at all. It is assumed to be set up via init sc
 
 == Server:
 
-*This cookbook no longer configures a Chef Server under Passenger by default.* 
-
-The stompserver and couchdb cookbooks are not included by default. See below under Cookbooks requirements.
-
-The default server recipe (chef::server) sets up two Merb Mongrel workers for the webui/api (port 4000) and openid (port 4001).
+The default server recipe (chef_pkg::server) sets up two Merb Mongrel workers for the webui/api (port 4000) and openid (port 4001).
 
 The default server recipe (chef::server), creates but does not manage the chef-indexer and chef-server services, and configures both from /etc/chef/server.rb. Some package installation methods (e.g., Debian) have a separate config file for chef-indexer.
 

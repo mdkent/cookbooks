@@ -1,6 +1,6 @@
 #
 # Author:: Joshua Timberman <joshua@opscode.com>
-# Cookbook Name:: chef
+# Cookbook Name:: chef_pkg
 # Attributes:: chef
 #
 # Copyright 2008-2009, Opscode, Inc

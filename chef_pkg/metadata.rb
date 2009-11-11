@@ -1,12 +1,12 @@
 maintainer        "Opscode, Inc."
 maintainer_email  "cookbooks@opscode.com"
 license           "Apache 2.0"
-description       "Installs and configures chef client and server install via distribution packages"
+description       "Configures and maintains chef client and server installs previously installed via distribution packages"
 long_description  IO.read(File.join(File.dirname(__FILE__), 'README.rdoc'))
-version           "0.13"
-recipe            "chef::client", "Configures a Chef client installed from packages"
-recipe            "chef::server", "Configures a Chef server installed from packages"
-recipe            "chef::server_proxy", "Configures an Apache SSL proxy in front of your chef-server"
+version           "0.1"
+recipe            "chef_pkg::client", "Configures a Chef client installed from packages"
+recipe            "chef_pkg::server", "Configures a Chef server installed from packages"
+recipe            "chef_pkg::server_proxy", "Configures an Apache SSL proxy in front of your chef-server"
 
 %w{ apache2 }.each do |cb|
   depends cb

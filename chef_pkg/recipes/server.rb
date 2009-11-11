@@ -1,7 +1,7 @@
 #
 # Author:: Joshua Timberman <joshua@opscode.com>
 # Author:: Joshua Sierles <joshua@37signals.com>
-# Cookbook Name:: chef
+# Cookbook Name:: chef_pkg
 # Recipe:: server
 #
 # Copyright 2008-2009, Opscode, Inc
@@ -19,7 +19,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-include_recipe "chef::client"
+include_recipe "chef_pkg::client"
 
 %w{chef-indexer chef-server}.each do |svc| 
   service svc do
