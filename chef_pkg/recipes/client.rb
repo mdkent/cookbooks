@@ -61,5 +61,5 @@ service "chef-client" do
   supports [ :restart, :reload, :status ]
   # Change this to :disable if you want to run chef-client in the foreground or
   # via cron.
-  action :enabled
+  action [ :enable, :start ]
 end

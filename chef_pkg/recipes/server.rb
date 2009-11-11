@@ -87,6 +87,6 @@ end
 
 %w{chef-indexer chef-server}.each do |svc| 
   service svc do
-    action :enabled
+    action [ :enable, :start ]
   end
 end
