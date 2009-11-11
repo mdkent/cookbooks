@@ -34,7 +34,7 @@ default.chef.log_path        = "/var/log/chef"
 
 # You can change or override these to STDOUT if you plan on running them in the
 # foreground.
-default.chef.client_log  = STDOUT
+default.chef.client_log  = "STDOUT"
 default.chef.indexer_log = "#{chef[:log_path]}/indexer.log"
 default.chef.server_log  = "#{chef[:log_path]}/server.log"
 
