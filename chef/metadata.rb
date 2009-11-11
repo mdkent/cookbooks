@@ -1,13 +1,14 @@
 maintainer        "Opscode, Inc."
 maintainer_email  "cookbooks@opscode.com"
 license           "Apache 2.0"
-description       "Installs and configures chef client and server"
+description       "Installs and configures chef client and server install via distribution packages"
 long_description  IO.read(File.join(File.dirname(__FILE__), 'README.rdoc'))
-version           "0.12"
-recipe            "chef::client", "Sets up a client to talk to a chef-server"
-recipe            "chef::server", "Configures a chef-server as a passenger application"
+version           "0.13"
+recipe            "chef::client", "Configures a Chef client installed from packages"
+recipe            "chef::server", "Configures a Chef server installed from packages"
+recipe            "chef::server_proxy", "Configures an Apache SSL proxy in front of your chef-server"
 
-%w{ runit packages couchdb stompserver apache2 passenger_apache2 }.each do |cb|
+%w{ apache2 }.each do |cb|
   depends cb
 end
 
@@ -15,73 +16,73 @@ end
   supports os
 end
 
+attribute "chef/url_type",
+  :display_name => "URL Type",
+  :description => "Type of URL to use when referencing the chef server in config templates",
+  :default => "http"
+
 attribute "chef/path",
   :display_name => "Chef Path",
   :description => "Filesystem location for Chef files",
-  :default => "/srv/chef"
+  :default => "/var/lib/chef"
 
 attribute "chef/run_path",
   :display_name => "Chef Run Path",
   :description => "Filesystem location for Chef 'run' files",
   :default => "/var/run/chef"
 
-attribute "chef/client_version",
-  :display_name => "Chef Client Version",
-  :description => "Set the version of the client gem to install",
-  :default => "0.7.10"
+attribute "chef/cache_path",
+  :display_name => "Chef Cache Path",
+  :description => "Filesystem location for Chef 'cache' files",
+  :default => "/var/cache/chef"
+
+attribute "chef/serve_path",
+  :display_name => "Chef Serve Path",
+  :description => "Filesystem location for Chef 'srv' files",
+  :default => "/srv/chef"
 
 attribute "chef/client_interval",
-  :display_name => "Chef Client Interval ",
+  :display_name => "Chef Client Interval",
   :description => "Poll chef client process to run on this interval in seconds",
   :default => "1800"
 
 attribute "chef/client_splay",
-  :display_name => "Chef Client Splay ",
+  :display_name => "Chef Client Splay",
   :description => "Random number of seconds to add to interval",
   :default => "20"
 
+attribute "chef/log_path",
+  :display_name => "Chef Log Path",
+  :description => "Filesystem location for Chef 'log' files",
+  :default => "/var/log/chef"
+
 attribute "chef/client_log",
   :display_name => "Chef Client Log",
-  :description => "Location of the chef client log",
+  :description => "Location of the Chef client log",
   :default => "STDOUT"
 
 attribute "chef/indexer_log",
   :display_name => "Chef Indexer Log ",
-  :description => "Location of the chef-indexer log",
+  :description => "Location of the Chef indexer log",
   :default => "/var/log/chef/indexer.log"
 
-attribute "chef/server_version",
-  :display_name => "Chef Server Version",
-  :description => "Set the version of the server and server-slice gems to install",
-  :default => "0.7.10"
 
 attribute "chef/server_log",
   :display_name => "Chef Server Log",
   :description => "Location of the Chef server log",
   :default => "/var/log/chef/server.log"
 
-attribute "chef/server_path",
-  :display_name => "Chef Server Path",
-  :description => "Location of the Chef Server assets",
-  :default => "gem_dir/gems/chef-server-chef_server_version"
-
-attribute "chef/server_hostname",
-  :display_name => "Chef Server Hostname",
-  :description => "Hostname for the chef server, for building FQDN",
-  :default => "hostname"
-
 attribute "chef/server_fqdn",
   :display_name => "Chef Server Fully Qualified Domain Name",
   :description => "FQDN of the Chef server for Apache vhost and SSL certificate and clients",
-  :default => "hostname.domain"
-
-attribute "chef/server_ssl_req", 
-  :display_name => "Chef Server SSL Request",
-  :description => "Data to pass for creating the SSL certificate",
-  :default => "/C=US/ST=Several/L=Locality/O=Example/OU=Operations/CN=chef_server_fqdn/emailAddress=ops@domain"
+  :default => "fqdn"
 
 attribute "chef/server_token",
   :display_name => "Chef Server Validation Token",
   :description => "Value of the validation_token",
   :default => "randomly generated"
 
+attribute "chef/server_ssl_req", 
+  :display_name => "Chef Server SSL Request",
+  :description => "Data to pass for creating the SSL certificate",
+  :default => "/C=US/ST=Several/L=Locality/O=Example/OU=Operations/CN=chef_server_fqdn/emailAddress=ops@domain"
